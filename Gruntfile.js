@@ -2,19 +2,22 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     jade: {
-      compile: {
+      dev: {
         options: {
-          data: {
-            debug: false
-          }
+          pretty: true
         },
         files: {
           'app/index.html': 'jade/default.jade'
         }
+      },
+      dist: {
+        files: {
+          'dist/index.html': 'jade/default.jade'
+        }
       }
     },
     sass: {
-      dist: {
+      compile: {
         options: {
           style: 'expanded'
         },
@@ -26,7 +29,7 @@ module.exports = function(grunt) {
     cssmin: {
       combine: {
         files: {
-          'app/css/main.css': ['components/css/normalize.css','components/css/main.css','temp/style.css']
+          'dist/css/main.css': 'app/css/main.css'
         }
       }
     },
@@ -38,15 +41,19 @@ module.exports = function(grunt) {
       }
     },
     concat: {
+      css: {
+        src: ['components/css/normalize.css','components/css/main.css','temp/style.css'],
+        dest: 'app/css/main.css'
+      },
       js: {
         src: ['components/jquery/jquery.js','components/console.js','temp/coffee.js'],
-        dest: 'temp/main.js'
+        dest: 'app/js/main.js'
       }
     },
     uglify: {
       dist: {
         files: {
-          'app/js/main.js': ['temp/main.js']
+          'dist/js/main.js': 'app/js/main.js'
         }
       }
     },
@@ -57,26 +64,33 @@ module.exports = function(grunt) {
           base: 'app',
           keepalive: false
         }
+      },
+      dist: {
+        options: {
+          port: 9001,
+          base: 'dist',
+          keepalive: true
+        }
       }
     },
     watch: {
       jade: {
         files: 'jade/default.jade',
-        tasks: ['jade'],
+        tasks: ['jade:dev'],
         options: {
           livereload: true
         }
       },
       sass: {
         files: 'sass/style.sass',
-        tasks: ['sass','cssmin'],
+        tasks: ['sass','concat:css'],
         options: {
           livereload: true
         }
       },
       coffee: {
         files: ['coffee/main.coffee'],
-        tasks: ['coffee','concat:js','uglify']
+        tasks: ['coffee','concat:js']
       }
     }
   });
@@ -88,5 +102,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.registerTask('dev',['jade','sass','cssmin','coffee','concat:js','uglify','connect:dev','watch']);
+  grunt.registerTask('dev',['jade:dev','sass','concat:css','coffee','concat:js','connect:dev','watch']);
+  grunt.registerTask('dist',['jade:dist','sass','concat:css','cssmin','coffee','concat:js','uglify:dist']);
+  grunt.registerTask('preview',['connect:dist']);
 };
