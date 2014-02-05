@@ -1,0 +1,19 @@
+{
+  "name": "front-lit",
+  "version": "0.0.1",
+  "authors": [
+    "yanawaro"
+  ],
+  "description": "front end components",
+  "homepage": "https://github.com/yanawaro/front-lit",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.0.3"
+  }
+}

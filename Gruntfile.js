@@ -42,11 +42,11 @@ module.exports = function(grunt) {
     },
     concat: {
       css: {
-        src: ['components/css/normalize.css','components/css/main.css','temp/style.css'],
+        src: ['components/base/css/normalize.css','components/base/css/main.css','temp/style.css'],
         dest: 'app/css/main.css'
       },
       js: {
-        src: ['components/jquery/jquery.js','components/console.js','temp/coffee.js'],
+        src: ['components/bower_components/jquery/jquery.js','components/base/console.js','temp/coffee.js'],
         dest: 'app/js/main.js'
       }
     },
@@ -60,6 +60,7 @@ module.exports = function(grunt) {
     connect: {
       dev: {
         options: {
+          hostname: '*',
           port: 9001,
           base: 'app',
           keepalive: false
@@ -67,6 +68,7 @@ module.exports = function(grunt) {
       },
       dist: {
         options: {
+          hostname: '*',
           port: 9001,
           base: 'dist',
           keepalive: true
